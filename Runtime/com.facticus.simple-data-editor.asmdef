@@ -1,5 +1,5 @@
 {
-    "name": "com.{{COMPANY}}.{{REPOSITORY_NAME}}",
+    "name": "com.facticus.simple-data-editor",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

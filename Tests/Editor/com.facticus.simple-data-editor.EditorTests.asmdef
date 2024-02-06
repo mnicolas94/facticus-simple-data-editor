@@ -1,7 +1,7 @@
 {
-  "name": "com.{{COMPANY}}.{{REPOSITORY_NAME}}.Editor.Tests",
+  "name": "com.facticus.simple-data-editor.Editor.Tests",
   "references": [
-    "com.{{COMPANY}}.{{REPOSITORY_NAME}}"
+    "com.facticus.simple-data-editor"
   ],
   "optionalUnityReferences": [
     "TestAssemblies"
