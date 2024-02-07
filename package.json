@@ -1,6 +1,6 @@
 {
   "name": "com.facticus.simple-data-editor",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "displayName": "Simple Data Editor",
   "description": "A simple generator of data editor windows for Unity",
   "unity": "2022.3",
