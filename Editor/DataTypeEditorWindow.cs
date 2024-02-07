@@ -20,6 +20,46 @@ namespace SimpleDataEditor.Editor
         private List<T> _data;
         private List<T> _filteredData;
         private ToolbarSearchField _searchField;
+        private Button _reloadButton;
+
+        public void CreateGUI()
+        {
+            var root = rootVisualElement;
+            
+            // Instantiate UXML
+            _visualTreeAsset = Resources.Load<VisualTreeAsset>("DataTypeEditorWindow");
+            VisualElement visualTree = _visualTreeAsset.Instantiate();
+            root.Add(visualTree);
+            
+            // setup PaneSplitView
+            var splitView = new TwoPaneSplitView(
+                0, 250, TwoPaneSplitViewOrientation.Horizontal);
+            root.Add(splitView);
+            var leftPanel = root.Q("LeftPanel");
+            var rightPanel = root.Q("RightPanel");
+            splitView.Add(leftPanel);
+            splitView.Add(rightPanel);
+
+            // setup data list
+            _listView = root.Q<ListView>("DataList");
+            CreateDataList();
+            
+            // search field
+            _searchField = root.Q<ToolbarSearchField>("DataSearchField");
+            _searchField.style.width = new StyleLength(StyleKeyword.Auto);
+            _searchField.RegisterValueChangedCallback(OnSearchFieldChanged);
+            
+            // reload data button
+            _reloadButton = root.Q<Button>("ReloadDataButton");
+            _reloadButton.clicked += OnReloadDataButtonClicked;
+            
+            // get reference to scroll view
+            _scrollView = root.Q<ScrollView>("InspectorContainer");
+            
+            // display serialized value if any
+            _listView.selectedIndex = _filteredData.IndexOf(_selectedObject as T);
+            SelectObject(_selectedObject);
+        }
 
         protected virtual List<T> LoadData()
         {
@@ -30,63 +70,55 @@ namespace SimpleDataEditor.Editor
                 .ToList();
             return data;
         }
-        
-        public void CreateGUI()
-        {
-            var root = rootVisualElement;
-            
-            // Instantiate UXML
-            _visualTreeAsset = Resources.Load<VisualTreeAsset>("DataTypeEditorWindow");
-            VisualElement visualTree = _visualTreeAsset.Instantiate();
-            root.Add(visualTree);
 
-            // setup data list
-            _listView = root.Q<ListView>("DataList");
-            CreateDataList();
-            
-            // get reference to scroll view
-            _scrollView = root.Q<ScrollView>("InspectorContainer");
-            
-            // search field
-            _searchField = root.Q<ToolbarSearchField>("DataSearchField");
-            _searchField.style.width = new StyleLength(StyleKeyword.Auto);
-            _searchField.RegisterValueChangedCallback(OnSearchFieldChanged);
-            
-            // setup PaneSplitView
-            var splitView = new TwoPaneSplitView(
-                0, 250, TwoPaneSplitViewOrientation.Horizontal);
-            root.Add(splitView);
-            var leftPanel = root.Q("LeftPanel");
-            var rightPanel = root.Q("RightPanel");
-            splitView.Add(leftPanel);
-            splitView.Add(rightPanel);
-            
-            // display serialized value if any
-            _listView.selectedIndex = _filteredData.IndexOf(_selectedObject as T);
-            SelectObject(_selectedObject);
+        private void LoadDataAndPopulateListView()
+        {
+            _data = LoadData();
+            _filteredData = new List<T>(_data);
+            if (!Equals(_listView.itemsSource, _filteredData))
+            {
+                _listView.itemsSource = _filteredData;
+            }
+            else
+            {
+                _listView.RefreshItems();
+            }
         }
 
         private void CreateDataList()
         {
             _listView.makeItem = CreateDataElement;
-            _listView.bindItem = BindDataToView;
+            _listView.bindItem = BindData;
             _listView.selectedIndicesChanged += OnDataListSelectedIndicesChanged;
-            _data = LoadData();
-            _filteredData = new List<T>(_data);
-            _listView.itemsSource = _filteredData;
+            LoadDataAndPopulateListView();
+        }
+
+        private void BindData(VisualElement element, int i)
+        {
+            BindDataToView(element, i);
+            ContextualMenuManipulator contextManipulator = new ContextualMenuManipulator(SetupContextMenu);
+            contextManipulator.target = element;
+        }
+        
+        private void SetupContextMenu(ContextualMenuPopulateEvent ctx)
+        {
+            var target = ctx.target as VisualElement;
+            ctx.menu.AppendAction(
+                "Ping",
+                action => EditorGUIUtility.PingObject(target.userData as Object));
         }
 
         protected virtual void BindDataToView(VisualElement element, int i)
         {
-            var objectField = element as ObjectField;
-            objectField.objectType = typeof(T);
-            objectField.value = _filteredData[i];
+            if (element is DataElement dataElement)
+            {
+                dataElement.Data = _filteredData[i];
+            }
         }
 
         protected virtual VisualElement CreateDataElement()
         {
-            var field = new ObjectField();
-            field.SetEnabled(false);
+            var field = new DataElement();
             return field;
         }
         
@@ -98,6 +130,14 @@ namespace SimpleDataEditor.Editor
             _filteredData.Clear();
             _filteredData.AddRange(filteredData);
             _listView.RefreshItems();
+        }
+        
+        private void OnReloadDataButtonClicked()
+        {
+            _reloadButton.SetEnabled(false);
+            _searchField.SetValueWithoutNotify("");
+            LoadDataAndPopulateListView();
+            _reloadButton.SetEnabled(true);
         }
 
         private void OnDataListSelectedIndicesChanged(IEnumerable<int> indices)
@@ -128,6 +168,30 @@ namespace SimpleDataEditor.Editor
             {
                 _inspectorElement = new InspectorElement(_selectedObject);
                 container.Add(_inspectorElement);
+            }
+        }
+    }
+
+    public class DataElement : VisualElement
+    {
+        private Object _data;
+        private Label _label;
+
+        public DataElement()
+        {
+            _label = new Label();
+            Add(_label);
+        }
+
+
+        public Object Data
+        {
+            get => _data;
+            set
+            {
+                _data = value;
+                userData = value;
+                _label.text = _data.name;
             }
         }
     }
