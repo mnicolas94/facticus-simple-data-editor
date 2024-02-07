@@ -1,6 +1,9 @@
 {
     "name": "com.facticus.simple-data-editor.Editor",
-    "references": [],
+    "rootNamespace": "",
+    "references": [
+        "GUID:e823c30f3c406834ebc531c0acb68515"
+    ],
     "includePlatforms": [
         "Editor"
     ],

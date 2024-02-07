@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/SimpleDataEditor/Editor/Resources/EditorCodeGenerationWindow.uss?fileID=7433441132597879392&amp;guid=b27725ef8c9eea9419937ae8b989addd&amp;type=3#EditorCodeGenerationWindow" />
+    <ui:VisualElement name="InputContainer" style="flex-grow: 1; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px;" />
+    <ui:VisualElement style="flex-grow: 0; flex-direction: row-reverse;">
+        <ui:Button text="Generate" parse-escape-sequences="true" display-tooltip-when-elided="true" name="GenerateButton" style="flex-shrink: 1;" />
+    </ui:VisualElement>
+</ui:UXML>
