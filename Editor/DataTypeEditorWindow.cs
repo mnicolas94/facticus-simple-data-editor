@@ -11,13 +11,15 @@ namespace SimpleDataEditor.Editor
 {
     public abstract class DataTypeEditorWindow<T> : EditorWindow where T : ScriptableObject
     {
-        [SerializeField] private VisualTreeAsset _visualTreeAsset;
         [SerializeField] private Object _selectedObject;
         
+        private VisualTreeAsset _visualTreeAsset;
         private InspectorElement _inspectorElement;
         private ScrollView _scrollView;
         private ListView _listView;
         private List<T> _data;
+        private List<T> _filteredData;
+        private ToolbarSearchField _searchField;
 
         protected virtual List<T> LoadData()
         {
@@ -37,36 +39,48 @@ namespace SimpleDataEditor.Editor
             _visualTreeAsset = Resources.Load<VisualTreeAsset>("DataTypeEditorWindow");
             VisualElement visualTree = _visualTreeAsset.Instantiate();
             root.Add(visualTree);
-            
+
+            // setup data list
             _listView = root.Q<ListView>("DataList");
             CreateDataList();
+            
+            // get reference to scroll view
             _scrollView = root.Q<ScrollView>("InspectorContainer");
+            
+            // search field
+            _searchField = root.Q<ToolbarSearchField>("DataSearchField");
+            _searchField.style.width = new StyleLength(StyleKeyword.Auto);
+            _searchField.RegisterValueChangedCallback(OnSearchFieldChanged);
             
             // setup PaneSplitView
             var splitView = new TwoPaneSplitView(
                 0, 250, TwoPaneSplitViewOrientation.Horizontal);
             root.Add(splitView);
-            splitView.Add(_listView);
-            splitView.Add(_scrollView);
+            var leftPanel = root.Q("LeftPanel");
+            var rightPanel = root.Q("RightPanel");
+            splitView.Add(leftPanel);
+            splitView.Add(rightPanel);
             
             // display serialized value if any
+            _listView.selectedIndex = _filteredData.IndexOf(_selectedObject as T);
             SelectObject(_selectedObject);
         }
 
         private void CreateDataList()
         {
-            _data = LoadData();
             _listView.makeItem = CreateDataElement;
             _listView.bindItem = BindDataToView;
             _listView.selectedIndicesChanged += OnDataListSelectedIndicesChanged;
-            _listView.itemsSource = _data;
+            _data = LoadData();
+            _filteredData = new List<T>(_data);
+            _listView.itemsSource = _filteredData;
         }
 
         protected virtual void BindDataToView(VisualElement element, int i)
         {
             var objectField = element as ObjectField;
             objectField.objectType = typeof(T);
-            objectField.value = _data[i];
+            objectField.value = _filteredData[i];
         }
 
         protected virtual VisualElement CreateDataElement()
@@ -75,13 +89,23 @@ namespace SimpleDataEditor.Editor
             field.SetEnabled(false);
             return field;
         }
+        
+        private void OnSearchFieldChanged(ChangeEvent<string> evt)
+        {
+            var value = evt.newValue;
+            var lowerCaseValue = value.ToLower();
+            var filteredData = _data.Where(d => d.name.ToLower().Contains(lowerCaseValue));
+            _filteredData.Clear();
+            _filteredData.AddRange(filteredData);
+            _listView.RefreshItems();
+        }
 
         private void OnDataListSelectedIndicesChanged(IEnumerable<int> indices)
         {
             var index = indices.FirstOrDefault();
             if (index >= 0)
             {
-                SelectObject(_data[index]);
+                SelectObject(_filteredData[index]);
             }
             else
             {
@@ -91,14 +115,15 @@ namespace SimpleDataEditor.Editor
 
         private void SelectObject(Object obj)
         {
+            _selectedObject = obj;
+            
             var container = _scrollView.contentContainer;
             if (container.Contains(_inspectorElement))
             {
                 container.Remove(_inspectorElement);
                 _inspectorElement = null;
             }
-
-            _selectedObject = obj;
+            
             if (_selectedObject != null)
             {
                 _inspectorElement = new InspectorElement(_selectedObject);

@@ -1,7 +1,12 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/SimpleDataEditor/Editor/Resources/DataTypeEditorWindow.uss?fileID=7433441132597879392&amp;guid=d1fc19f654bc10943a2058c5f52f1a22&amp;type=3#DataTypeEditorWindow" />
     <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
-        <ui:ListView name="DataList" style="flex-grow: 1;" />
-        <ui:ScrollView name="InspectorContainer" style="flex-grow: 1;" />
+        <ui:VisualElement name="LeftPanel" style="flex-grow: 1;">
+            <uie:ToolbarSearchField name="DataSearchField" />
+            <ui:ListView name="DataList" style="flex-grow: 1;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="RightPanel" style="flex-grow: 1;">
+            <ui:ScrollView name="InspectorContainer" style="flex-grow: 1;" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
