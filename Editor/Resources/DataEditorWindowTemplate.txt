@@ -12,12 +12,12 @@ using {{ TypeNamespace }};
 
 namespace SimpleDataEditor.Generated
 {
-    public partial class {{ DataType }}EditorWindow : DataTypeEditorWindow<{{ DataType }}>
+    public partial class {{ TypeName }}EditorWindow : DataTypeEditorWindow<{{ TypeName }}>
     {
         [MenuItem("{{ MenuItemPath }}")]
         private static void ShowWindow()
         {
-            var window = GetWindow<{{ DataType }}EditorWindow>();
+            var window = GetWindow<{{ TypeName }}EditorWindow>();
             window.titleContent = new GUIContent("{{ WindowTitle }}");
             window.Show();
         }

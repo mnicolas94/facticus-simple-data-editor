@@ -2,6 +2,7 @@
     "name": "com.facticus.simple-data-editor.Editor",
     "rootNamespace": "",
     "references": [
+        "GUID:c35c6d9084ba1a541868fbd8c50a585a",
         "GUID:e823c30f3c406834ebc531c0acb68515"
     ],
     "includePlatforms": [

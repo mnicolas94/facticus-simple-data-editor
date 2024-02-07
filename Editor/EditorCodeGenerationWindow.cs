@@ -4,6 +4,8 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Utils.Serializables;
+using Object = UnityEngine.Object;
 
 namespace SimpleDataEditor.Editor
 {
@@ -40,8 +42,7 @@ namespace SimpleDataEditor.Editor
                 inputContainer.Add(field);
             }
             
-            DrawInputField(nameof(_inputData.TypeNamespace));
-            DrawInputField(nameof(_inputData.TypeName));
+            DrawInputField(nameof(_inputData.Type));
             DrawInputField(nameof(_inputData.MenuItemPath));
             DrawInputField(nameof(_inputData.WindowTitle));
             
@@ -54,26 +55,23 @@ namespace SimpleDataEditor.Editor
         {
             var data = new
             {
-                TypeNamespace = _inputData.TypeNamespace,
-                DataType = _inputData.TypeName,
+                TypeNamespace = _inputData.Type.Type.Namespace,
+                TypeName = _inputData.Type.Type.Name,
                 MenuItemPath = _inputData.MenuItemPath,
                 WindowTitle = _inputData.WindowTitle,
             };
             
-            Debug.Log(data);
-
-            // var templateAsset = Resources.Load<TextAsset>("DataEditorWindowTemplate");
-            // var templatePath = AssetDatabase.GetAssetPath(templateAsset);
-            // var scriptPath = "Scripts/Generated/MyTemplate.generated.cs";  // TODO get from settings
-            // CodeGenerator.GenerateFromTemplate(templatePath, scriptPath, data);
+            var templateAsset = Resources.Load<TextAsset>("DataEditorWindowTemplate");
+            var templatePath = AssetDatabase.GetAssetPath(templateAsset);
+            var scriptPath = "Scripts/Generated/MyTemplate.generated.cs";  // TODO get from settings
+            CodeGenerator.GenerateFromTemplate(templatePath, scriptPath, data);
         }
     }
     
     [Serializable]
     public class InputData
     {
-        [SerializeField] public string TypeNamespace;
-        [SerializeField] public string TypeName;
+        [SerializeField] public TypeReference<Object> Type;
         [SerializeField] public string MenuItemPath;
         [SerializeField] public string WindowTitle;
     }
