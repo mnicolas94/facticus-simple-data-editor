@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using SimpleCodeGenerator.Editor;
 using Unity.Plastic.Newtonsoft.Json.Linq;
 using UnityEditor;
@@ -94,9 +95,13 @@ namespace SimpleDataEditor.Editor
 
             var json = JObject.Parse(assemblyContent);
             var reference = type.Assembly.GetName().Name;
-            if (json["references"] is JArray references && !references.Contains(reference))
+            if (json["references"] is JArray references)
             {
-                references.Add(reference);
+                var cleanReferences = references.Select(r => r.ToString().Trim());
+                if (!cleanReferences.Contains(reference))
+                {
+                    references.Add(reference);
+                }
             }
             var newContent = json.ToString();
             File.WriteAllText(assemblyPath, newContent);
