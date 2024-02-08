@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using SimpleCodeGenerator.Editor;
+using SimpleDataEditor.Editor.Settings;
 using Unity.Plastic.Newtonsoft.Json.Linq;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -65,8 +66,9 @@ namespace SimpleDataEditor.Editor
                 MenuItemPath = _inputData.MenuItemPath, 
                 WindowTitle = _inputData.WindowTitle,
             };
-            
-            var generationFolder = Path.GetFullPath("Assets/Scripts/Generated");  // TODO get from settings
+
+            var generationFolder = SimpleDataEditorSettings.GetOrCreate().GenerationFolder;
+            generationFolder = Path.GetFullPath(generationFolder);
             // remove dataPath in order to work with CodeGenerator, as it adds dataPath to the start of output path
             var dataPath = Path.GetFullPath(Application.dataPath);
             if (generationFolder.StartsWith(dataPath))
