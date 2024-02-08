@@ -78,8 +78,9 @@ namespace SimpleDataEditor.Editor
             
             var templateAsset = Resources.Load<TextAsset>("TemplateDataEditorWindow");
             var templatePath = AssetDatabase.GetAssetPath(templateAsset);
+            var template = Template.ParseFromFile(templatePath);
             var scriptPath = Path.Combine(generationFolder, $"{type.FullName}EditorWindow.generated.cs");
-            CodeGenerator.GenerateFromTemplate(templatePath, scriptPath, data);
+            CodeGenerator.GenerateFromTemplate(template, scriptPath, data);
             
             // generate assembly definition and add references
             var assemblyPath = Path.Combine(Application.dataPath, generationFolder, "com.facticus.simple-data-editor.generated.asmdef");
