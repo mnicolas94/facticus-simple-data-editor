@@ -183,7 +183,6 @@ namespace SimpleDataEditor.Editor
             Add(_label);
         }
 
-
         public Object Data
         {
             get => _data;
