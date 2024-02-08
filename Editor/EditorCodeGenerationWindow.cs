@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using SimpleCodeGenerator.Editor;
+using Unity.Plastic.Newtonsoft.Json.Linq;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -50,21 +52,54 @@ namespace SimpleDataEditor.Editor
             var generateButton = root.Q<Button>("GenerateButton");
             generateButton.clicked += GenerateEditorWindowCode;
         }
-        
-        public void GenerateEditorWindowCode()
+
+        private void GenerateEditorWindowCode()
         {
+            // generate editor window code
+            var type = _inputData.Type.Type;
             var data = new
             {
-                TypeNamespace = _inputData.Type.Type.Namespace,
-                TypeName = _inputData.Type.Type.Name,
-                MenuItemPath = _inputData.MenuItemPath,
+                TypeNamespace = type.Namespace,
+                TypeName = type.Name,
+                MenuItemPath = _inputData.MenuItemPath, 
                 WindowTitle = _inputData.WindowTitle,
             };
             
-            var templateAsset = Resources.Load<TextAsset>("DataEditorWindowTemplate");
+            var generationFolder = Path.GetFullPath("Assets/Scripts/Generated");  // TODO get from settings
+            // remove dataPath in order to work with CodeGenerator, as it adds dataPath to the start of output path
+            var dataPath = Path.GetFullPath(Application.dataPath);
+            if (generationFolder.StartsWith(dataPath))
+            {
+                generationFolder = Path.GetRelativePath(dataPath, generationFolder);
+            }
+            
+            var templateAsset = Resources.Load<TextAsset>("TemplateDataEditorWindow");
             var templatePath = AssetDatabase.GetAssetPath(templateAsset);
-            var scriptPath = "Scripts/Generated/MyTemplate.generated.cs";  // TODO get from settings
+            var scriptPath = Path.Combine(generationFolder, $"{type.FullName}EditorWindow.generated.cs");
             CodeGenerator.GenerateFromTemplate(templatePath, scriptPath, data);
+            
+            // generate assembly definition and add references
+            var assemblyPath = Path.Combine(Application.dataPath, generationFolder, "com.facticus.simple-data-editor.generated.asmdef");
+            var assemblyExists = File.Exists(assemblyPath);
+            var assemblyContent = "";
+            if (assemblyExists)
+            {
+                assemblyContent = File.ReadAllText(assemblyPath);
+            }
+            else
+            {
+                var assemblyTemplateAsset = Resources.Load<TextAsset>("TemplateAssembly");
+                assemblyContent = assemblyTemplateAsset.text;
+            }
+
+            var json = JObject.Parse(assemblyContent);
+            var reference = type.Assembly.GetName().Name;
+            if (json["references"] is JArray references && !references.Contains(reference))
+            {
+                references.Add(reference);
+            }
+            var newContent = json.ToString();
+            File.WriteAllText(assemblyPath, newContent);
         }
     }
     

@@ -1,0 +1,16 @@
+{
+    "name": "com.facticus.simple-data-editor.samples",
+    "rootNamespace": "",
+    "references": [
+        "GUID:700ea0a04589e9f4295086b09662ce78"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

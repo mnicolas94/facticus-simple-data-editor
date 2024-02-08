@@ -1,0 +1,18 @@
+{
+    "name": "com.facticus.simple-data-editor.Generated",
+    "rootNamespace": "",
+    "references": [
+        "com.facticus.simple-data-editor.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
