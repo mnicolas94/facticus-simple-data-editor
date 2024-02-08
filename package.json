@@ -5,7 +5,10 @@
   "description": "A simple generator of data editor windows for Unity",
   "unity": "2022.3",
   "unityRelease": "",
-  "dependencies": {},
+  "dependencies": {
+    "com.facticus.utils": "0.13.0",
+    "com.sandrofigo.simplecodegenerator": "2.0.0"
+  },
   "keywords": [],
   "author": {
     "name": "Facticus",
