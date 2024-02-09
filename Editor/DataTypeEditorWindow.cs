@@ -13,8 +13,8 @@ namespace SimpleDataEditor.Editor
     public abstract class DataTypeEditorWindow<T> : EditorWindow where T : ScriptableObject
     {
         [SerializeField] private Object _selectedObject;
+        [SerializeField] private VisualTreeAsset _visualTreeAsset;
         
-        private VisualTreeAsset _visualTreeAsset;
         private InspectorElement _inspectorElement;
         private ScrollView _scrollView;
         private ListView _listView;
@@ -28,7 +28,7 @@ namespace SimpleDataEditor.Editor
             var root = rootVisualElement;
             
             // Instantiate UXML
-            _visualTreeAsset = Resources.Load<VisualTreeAsset>("DataTypeEditorWindow");
+            _visualTreeAsset ??= Resources.Load<VisualTreeAsset>("DataTypeEditorWindow");
             VisualElement visualTree = _visualTreeAsset.Instantiate();
             root.Add(visualTree);
             
