@@ -122,6 +122,11 @@ namespace SimpleDataEditor.Editor
             File.WriteAllText(assemblyPath, newContent);
         }
 
+        /// <summary>
+        /// Generate EditorSettings for the given type.
+        /// </summary>
+        /// <param name="generationFolder"></param>
+        /// <param name="type"></param>
         private void GenerateEditorSettings(string generationFolder, Type type)
         {
             var settings = CreateInstance<DataTypeEditorWindowSettings>();

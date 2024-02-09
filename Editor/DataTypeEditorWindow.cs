@@ -22,6 +22,8 @@ namespace SimpleDataEditor.Editor
         private List<T> _filteredData;
         private ToolbarSearchField _searchField;
         private Button _reloadButton;
+        private Button _addButton;
+        private Button _removeButton;
 
         // protected abstract DataTypeEditorWindowSettings GetSettings();
         
@@ -54,6 +56,14 @@ namespace SimpleDataEditor.Editor
             // reload data button
             _reloadButton = root.Q<Button>("ReloadDataButton");
             _reloadButton.clicked += OnReloadDataButtonClicked;
+            
+            // add data button
+            _addButton = root.Q<Button>("AddButton");
+            _addButton.clicked += OnAddButtonClicked;
+            
+            // removee data button
+            _removeButton = root.Q<Button>("RemoveButton");
+            _removeButton.clicked += OnRemoveButtonClicked;
             
             // get reference to scroll view
             _scrollView = root.Q<ScrollView>("InspectorContainer");
@@ -140,6 +150,20 @@ namespace SimpleDataEditor.Editor
             _searchField.SetValueWithoutNotify("");
             LoadDataAndPopulateListView();
             _reloadButton.SetEnabled(true);
+        }
+        
+        private void OnAddButtonClicked()
+        {
+            Debug.Log("OnAddButtonClicked");
+        }
+
+        private void OnRemoveButtonClicked()
+        {
+            var data = _filteredData[_listView.selectedIndex];
+            var path = AssetDatabase.GetAssetPath(data);
+            AssetDatabase.DeleteAsset(path);
+            AssetDatabase.Refresh();
+            OnReloadDataButtonClicked();  // todo dont remove filtering
         }
 
         private void OnDataListSelectedIndicesChanged(IEnumerable<int> indices)
