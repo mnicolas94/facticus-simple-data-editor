@@ -21,5 +21,23 @@ namespace SimpleDataEditor.Generated
             window.titleContent = new GUIContent("{{ WindowTitle }}");
             window.Show();
         }
+        
+        // override in partial class for custom behaviour
+        protected override List<TestData> LoadData()
+        {
+            return base.LoadData();
+        }
+
+        // override in partial class for custom behaviour
+        protected override void BindDataToView(VisualElement element, int i)
+        {
+            base.BindDataToView(element, i);
+        }
+
+        // override in partial class for custom behaviour
+        protected override VisualElement CreateDataElement()
+        {
+            return base.CreateDataElement();
+        }
     }
 }
