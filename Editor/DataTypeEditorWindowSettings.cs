@@ -13,5 +13,7 @@ namespace SimpleDataEditor.Editor
             get => _assetCreationFolder;
             set => _assetCreationFolder = value;
         }
+        
+        public string AssetCreationFolderPath => AssetDatabase.GetAssetPath(_assetCreationFolder);
     }
 }

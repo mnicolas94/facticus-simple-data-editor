@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using SimpleDataEditor.Editor.Settings;
 using SimpleDataEditor.Editor.VisualElements;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -154,11 +156,21 @@ namespace SimpleDataEditor.Editor
         
         private void OnAddButtonClicked()
         {
-            Debug.Log("OnAddButtonClicked");
+            // todo add undo support
+            var newData = CreateInstance<T>();
+            var packageSettings = SimpleDataEditorSettings.GetOrCreate();
+            var editorSettings = packageSettings.GetOrCreateSettingsForEditorOfType(typeof(T));
+            var path = Path.Combine(editorSettings.AssetCreationFolderPath, "New Data.asset");
+            path = AssetDatabase.GenerateUniqueAssetPath(path);
+            AssetDatabase.CreateAsset(newData, path);
+            AssetDatabase.Refresh();
+            OnReloadDataButtonClicked();  // todo dont remove filtering
+            // todo start renaming after creation
         }
 
         private void OnRemoveButtonClicked()
         {
+            // todo add undo support
             var data = _filteredData[_listView.selectedIndex];
             var path = AssetDatabase.GetAssetPath(data);
             AssetDatabase.DeleteAsset(path);
