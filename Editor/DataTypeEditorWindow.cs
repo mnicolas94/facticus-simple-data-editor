@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SimpleDataEditor.Editor.VisualElements;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -110,7 +111,7 @@ namespace SimpleDataEditor.Editor
 
         protected virtual void BindDataToView(VisualElement element, int i)
         {
-            if (element is DataElement dataElement)
+            if (element is DataListElement dataElement)
             {
                 dataElement.Data = _filteredData[i];
             }
@@ -118,7 +119,7 @@ namespace SimpleDataEditor.Editor
 
         protected virtual VisualElement CreateDataElement()
         {
-            var field = new DataElement();
+            var field = new DataListElement();
             return field;
         }
         
@@ -168,29 +169,6 @@ namespace SimpleDataEditor.Editor
             {
                 _inspectorElement = new InspectorElement(_selectedObject);
                 container.Add(_inspectorElement);
-            }
-        }
-    }
-
-    public class DataElement : VisualElement
-    {
-        private Object _data;
-        private Label _label;
-
-        public DataElement()
-        {
-            _label = new Label();
-            Add(_label);
-        }
-
-        public Object Data
-        {
-            get => _data;
-            set
-            {
-                _data = value;
-                userData = value;
-                _label.text = _data.name;
             }
         }
     }
