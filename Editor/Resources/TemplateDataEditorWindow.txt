@@ -5,9 +5,11 @@
 // </auto-generated>
 // ----------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using SimpleDataEditor.Editor;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 using {{ TypeNamespace }};
 
 namespace SimpleDataEditor.Generated
