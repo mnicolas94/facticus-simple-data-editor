@@ -23,6 +23,8 @@ namespace SimpleDataEditor.Editor
         private ToolbarSearchField _searchField;
         private Button _reloadButton;
 
+        // protected abstract DataTypeEditorWindowSettings GetSettings();
+        
         public void CreateGUI()
         {
             var root = rootVisualElement;
@@ -33,8 +35,7 @@ namespace SimpleDataEditor.Editor
             root.Add(visualTree);
             
             // setup PaneSplitView
-            var splitView = new TwoPaneSplitView(
-                0, 250, TwoPaneSplitViewOrientation.Horizontal);
+            var splitView = new TwoPaneSplitView(0, 250, TwoPaneSplitViewOrientation.Horizontal);
             root.Add(splitView);
             var leftPanel = root.Q("LeftPanel");
             var rightPanel = root.Q("RightPanel");

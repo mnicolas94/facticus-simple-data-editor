@@ -6,7 +6,7 @@
   "unity": "2022.3",
   "unityRelease": "",
   "dependencies": {
-    "com.facticus.utils": "0.13.0",
+    "com.facticus.utils": "0.13.1",
     "com.sandrofigo.simplecodegenerator": "2.0.0"
   },
   "keywords": [],

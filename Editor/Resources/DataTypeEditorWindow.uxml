@@ -4,7 +4,12 @@
         <ui:VisualElement name="LeftPanel" style="flex-grow: 1;">
             <uie:ToolbarSearchField name="DataSearchField" />
             <ui:ListView name="DataList" style="flex-grow: 0; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px;" />
-            <ui:Button text="Reload data" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ReloadDataButton" />
+            <ui:VisualElement name="ButtonsContainer" style="flex-grow: 0; flex-direction: row;">
+                <ui:Button text="Reload data" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ReloadDataButton" />
+                <ui:VisualElement name="Space" style="flex-grow: 1;" />
+                <ui:Button text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddButton" />
+                <ui:Button text="-" parse-escape-sequences="true" display-tooltip-when-elided="true" name="RemoveButton" />
+            </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="RightPanel" style="flex-grow: 1;">
             <ui:ScrollView name="InspectorContainer" style="flex-grow: 1;" />
