@@ -45,7 +45,7 @@ namespace SimpleDataEditor.Editor.Settings
             return settings;
         }
 
-        public void RegisterSettingsForEditorOfType(Type type, DataTypeEditorWindowSettings settings)
+        private void RegisterSettingsForEditorOfType(Type type, DataTypeEditorWindowSettings settings)
         {
             var tuple = new TypeToSettingsTuple(type, settings);
             _editorsSettings.Add(tuple);

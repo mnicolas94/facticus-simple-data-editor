@@ -80,7 +80,7 @@ namespace SimpleDataEditor.Editor
             GenerateCodeEditor(generationFolder, type);
             
             // generate editor settings
-            GenerateEditorSettings(generationFolder, type);
+            GenerateEditorSettings(type);
         }
 
         private void GenerateCodeEditor(string generationFolder, Type type)
@@ -127,16 +127,15 @@ namespace SimpleDataEditor.Editor
         /// </summary>
         /// <param name="generationFolder"></param>
         /// <param name="type"></param>
-        private void GenerateEditorSettings(string generationFolder, Type type)
+        private void GenerateEditorSettings(Type type)
         {
-            var settings = CreateInstance<DataTypeEditorWindowSettings>();
-            settings.AssetCreationFolder = _inputData.AssetCreationFolder;
-            var settingsPath = GetEditorSettingsPath(generationFolder, type);
-            AssetDatabase.CreateAsset(settings, settingsPath);
-            AssetDatabase.SaveAssetIfDirty(settings);
-            
             var packageSettings = SimpleDataEditorSettings.GetOrCreate();
-            packageSettings.RegisterSettingsForEditorOfType(type, settings);
+            var settings = packageSettings.GetOrCreateSettingsForEditorOfType(type);
+            
+            settings.AssetCreationFolder = _inputData.AssetCreationFolder;
+            
+            EditorUtility.SetDirty(settings);
+            AssetDatabase.SaveAssetIfDirty(settings);
         }
 
         private static string NormalizePathForCodeGenerator(string generationFolder)
