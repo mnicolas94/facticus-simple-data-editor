@@ -177,7 +177,7 @@ namespace SimpleDataEditor.Editor
         [SerializeField] public TypeReference<Object> Type;
         public string TypeNamespace => Type.Type.Namespace;
         public string TypeName => Type.Type.Name;
-        [SerializeField] public string MenuItemPath;
+        [SerializeField] public string MenuItemPath = "e.g. Data/Edit data";
         [SerializeField] public string WindowTitle;
         [SerializeField, PathSelector(isDirectory: true)] public DefaultAsset AssetCreationFolder;
     }
