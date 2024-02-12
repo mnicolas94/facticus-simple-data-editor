@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: TestData 2
   m_EditorClassIdentifier: 
   _stringField: 
-  _intField: 2
+  _intField: 0

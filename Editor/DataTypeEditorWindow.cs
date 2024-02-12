@@ -26,8 +26,6 @@ namespace SimpleDataEditor.Editor
         private Button _reloadButton;
         private Button _addButton;
         private Button _removeButton;
-
-        // protected abstract DataTypeEditorWindowSettings GetSettings();
         
         public void CreateGUI()
         {
@@ -98,6 +96,39 @@ namespace SimpleDataEditor.Editor
                 _listView.RefreshItems();
             }
         }
+        
+        private void ReloadDataAndClearSearchField()
+        {
+            _searchField.SetValueWithoutNotify("");
+            LoadDataAndPopulateListView();
+        }
+        
+        private void FilterBySearchString(string value)
+        {
+            var lowerCaseValue = value.ToLower();
+            var filteredData = _data.Where(d => d.name.ToLower().Contains(lowerCaseValue));
+            _filteredData.Clear();
+            _filteredData.AddRange(filteredData);
+            _listView.RefreshItems();
+        }
+        
+        private void SelectObject(Object obj)
+        {
+            _selectedObject = obj;
+            
+            var container = _scrollView.contentContainer;
+            if (container.Contains(_inspectorElement))
+            {
+                container.Remove(_inspectorElement);
+                _inspectorElement = null;
+            }
+            
+            if (_selectedObject != null)
+            {
+                _inspectorElement = new InspectorElement(_selectedObject);
+                container.Add(_inspectorElement);
+            }
+        }
 
         private void CreateDataList()
         {
@@ -139,21 +170,16 @@ namespace SimpleDataEditor.Editor
         private void OnSearchFieldChanged(ChangeEvent<string> evt)
         {
             var value = evt.newValue;
-            var lowerCaseValue = value.ToLower();
-            var filteredData = _data.Where(d => d.name.ToLower().Contains(lowerCaseValue));
-            _filteredData.Clear();
-            _filteredData.AddRange(filteredData);
-            _listView.RefreshItems();
+            FilterBySearchString(value);
         }
-        
+
         private void OnReloadDataButtonClicked()
         {
             _reloadButton.SetEnabled(false);
-            _searchField.SetValueWithoutNotify("");
-            LoadDataAndPopulateListView();
+            ReloadDataAndClearSearchField();
             _reloadButton.SetEnabled(true);
         }
-        
+
         private void OnAddButtonClicked()
         {
             // todo add undo support
@@ -164,18 +190,25 @@ namespace SimpleDataEditor.Editor
             path = AssetDatabase.GenerateUniqueAssetPath(path);
             AssetDatabase.CreateAsset(newData, path);
             AssetDatabase.Refresh();
-            OnReloadDataButtonClicked();  // todo dont remove filtering
+            ReloadDataAndClearSearchField();
             // todo start renaming after creation
         }
 
         private void OnRemoveButtonClicked()
         {
             // todo add undo support
-            var data = _filteredData[_listView.selectedIndex];
+            var selectedIndex = _listView.selectedIndex;
+            var data = _filteredData[selectedIndex];
+            
+            // remove asset
             var path = AssetDatabase.GetAssetPath(data);
             AssetDatabase.DeleteAsset(path);
             AssetDatabase.Refresh();
-            OnReloadDataButtonClicked();  // todo dont remove filtering
+            
+            // remove from list view
+            _data.Remove(data);
+            _filteredData.RemoveAt(selectedIndex);
+            _listView.RefreshItems();
         }
 
         private void OnDataListSelectedIndicesChanged(IEnumerable<int> indices)
@@ -188,24 +221,6 @@ namespace SimpleDataEditor.Editor
             else
             {
                 SelectObject(null);
-            }
-        }
-
-        private void SelectObject(Object obj)
-        {
-            _selectedObject = obj;
-            
-            var container = _scrollView.contentContainer;
-            if (container.Contains(_inspectorElement))
-            {
-                container.Remove(_inspectorElement);
-                _inspectorElement = null;
-            }
-            
-            if (_selectedObject != null)
-            {
-                _inspectorElement = new InspectorElement(_selectedObject);
-                container.Add(_inspectorElement);
             }
         }
     }
