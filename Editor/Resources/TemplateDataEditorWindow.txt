@@ -25,7 +25,7 @@ namespace SimpleDataEditor.Generated
         }
         
         // override in partial class for custom behaviour
-        protected override List<TestData> LoadData()
+        protected override List<{{ TypeName }}> LoadData()
         {
             return base.LoadData();
         }
