@@ -112,6 +112,23 @@ namespace SimpleDataEditor.Editor
             _listView.RefreshItems();
         }
         
+        private static void CreateDataAsset(T newData, string fileName = "New Data")
+        {
+            var packageSettings = SimpleDataEditorSettings.GetOrCreate();
+            var editorSettings = packageSettings.GetOrCreateSettingsForEditorOfType(typeof(T));
+            var path = Path.Combine(editorSettings.AssetCreationFolderPath, $"{fileName}.asset");
+            path = AssetDatabase.GenerateUniqueAssetPath(path);
+            AssetDatabase.CreateAsset(newData, path);
+            AssetDatabase.Refresh();
+        }
+        
+        private void DuplicateElement(T sourceElement)
+        {
+            var duplicate = Instantiate(sourceElement);
+            CreateDataAsset(duplicate, sourceElement.name);
+            ReloadDataAndClearSearchField();
+        }
+        
         private void SelectObject(Object obj)
         {
             _selectedObject = obj;
@@ -151,6 +168,7 @@ namespace SimpleDataEditor.Editor
             ctx.menu.AppendAction(
                 "Ping",
                 action => EditorGUIUtility.PingObject(target.userData as Object));
+            ctx.menu.AppendAction("Duplicate", action => DuplicateElement(target.userData as T));
         }
 
         protected virtual void BindDataToView(VisualElement element, int i)
@@ -184,12 +202,7 @@ namespace SimpleDataEditor.Editor
         {
             // todo add undo support
             var newData = CreateInstance<T>();
-            var packageSettings = SimpleDataEditorSettings.GetOrCreate();
-            var editorSettings = packageSettings.GetOrCreateSettingsForEditorOfType(typeof(T));
-            var path = Path.Combine(editorSettings.AssetCreationFolderPath, "New Data.asset");
-            path = AssetDatabase.GenerateUniqueAssetPath(path);
-            AssetDatabase.CreateAsset(newData, path);
-            AssetDatabase.Refresh();
+            CreateDataAsset(newData);
             ReloadDataAndClearSearchField();
             // todo start renaming after creation
         }
