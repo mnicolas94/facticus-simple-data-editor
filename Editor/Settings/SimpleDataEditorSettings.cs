@@ -17,7 +17,7 @@ namespace SimpleDataEditor.Editor.Settings
         public string GenerationFolder => _generationFolder;
 
         [SerializeField, HideInInspector]
-        private List<TypeToSettingsTuple> _editorsSettings;
+        private List<TypeToSettingsTuple> _editorsSettings = new();
 
         public DataTypeEditorWindowSettings GetOrCreateSettingsForEditorOfType(Type type)
         {
