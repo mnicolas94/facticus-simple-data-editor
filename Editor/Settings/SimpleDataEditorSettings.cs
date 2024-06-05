@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
-using Utils;
+using Utils.Editor;
 using Utils.Attributes;
 using Utils.Serializables;
 using Object = UnityEngine.Object;
