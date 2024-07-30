@@ -25,6 +25,7 @@ namespace SimpleDataEditor.Editor.VisualElements
             
             var labelContainer = visualElement.Q("LabelContainer");
             labelContainer.Add(_label);
+            this.AddManipulator(new DragAndDropManipulator());
         }
 
         private void OnRename(string newName)
