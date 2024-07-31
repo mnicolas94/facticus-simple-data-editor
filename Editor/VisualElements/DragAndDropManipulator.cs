@@ -36,10 +36,6 @@ namespace SimpleDataEditor.Editor.VisualElements
             if (evt.button == 0)
             {
                 _dragState = DragState.Ready;
-
-                // Capturing the pointer in case of overlapping to ensure we get the pointer up event even if the pointer
-                // moved outside of the target.
-                target.CapturePointer(0);
             }
         }
 
@@ -48,8 +44,6 @@ namespace SimpleDataEditor.Editor.VisualElements
             if (_dragState == DragState.Ready && evt.button == 0)
             {
                 _dragState = DragState.AtRest;
-
-                target.ReleasePointer(0);
             }
         }
 
