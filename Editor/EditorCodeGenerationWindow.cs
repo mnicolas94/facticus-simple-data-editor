@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using SimpleCodeGenerator.Editor;
 using SimpleDataEditor.Editor.Settings;
-using Unity.Plastic.Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
