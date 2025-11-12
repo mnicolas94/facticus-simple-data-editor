@@ -4,11 +4,11 @@
         <uie:ToolbarToggle focusable="false" label="Data" name="DataToggle" />
         <uie:ToolbarToggle focusable="false" label="Settings" name="SettingsToggle" />
     </uie:Toolbar>
-    <ui:VisualElement name="DataContainer" style="flex-grow: 1; flex-shrink: 0;">
+    <ui:VisualElement name="DataContainer" style="flex-grow: 1;">
         <ui:VisualElement name="LeftPanel" style="flex-grow: 1;">
             <uie:ToolbarSearchField name="DataSearchField" />
-            <ui:ListView name="DataList" style="flex-grow: 0; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px;" />
-            <ui:VisualElement name="ButtonsContainer" style="flex-grow: 0; flex-direction: row;">
+            <ui:ListView name="DataList" style="padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px;" />
+            <ui:VisualElement name="ButtonsContainer" style="flex-direction: row; flex-grow: 1; flex-shrink: 0;">
                 <ui:Button text="Reload data" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ReloadDataButton" />
                 <ui:VisualElement name="Space" style="flex-grow: 1;" />
                 <ui:Button text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddButton" />
